@@ -120,10 +120,6 @@ function install_random() {
 
 }
 
-function install_scar() {
-  
-}
-
 function install_apt_packages() {
   for apt_pkg in $@; do
     if ! $(dpkg -s $apt_pkg &> /dev/null); then
