@@ -256,6 +256,23 @@ function install_docker() {
   fi
 }
 
+function setup_locale() {
+  # Check if en_US.UTF-8 locale is available
+  if ! locale -a | grep -q "en_US.utf8"; then
+    # Generate en_US.UTF-8 locale
+    sudo locale-gen en_US.UTF-8
+  fi
+
+  # Ensure the locale settings are properly configured
+  sudo tee /etc/default/locale > /dev/null <<EOF
+LANG="en_US.UTF-8"
+LANGUAGE="en_US:en"
+LC_ALL="en_US.UTF-8"
+EOF
+
+  # Apply the locale settings
+  sudo update-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
+}
 
 function main() {
   PACKAGES="python dotfiles"
@@ -288,6 +305,8 @@ function main() {
 
   # upgrade everything (no balls)
   sudo apt upgrade -y
+
+  setup_locale
 
   install_apt_packages "${DEFAULT_APT_PACKAGES}"
 
